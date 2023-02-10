@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TODO with Bootstrap</title>
+    <!-- CSS Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+    <!-- Icon FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body style="background-color: #00425A;">
+    <div class="container ms-auto mt-4 p-4 bg-white rounded">
+        <div class="row">
+            <h1 class="pt-1 pb-1">Aplikasi To Do List Himakom</h1>
+            <hr>
+            <div class="row mb-3">
+                <label for="todoText" class="col-md-2 col-form-label">Kegiatanmu : </label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="inputTodo" placeholder="Masukan Kegiatanmu!">
+                </div>
+                <div class="col-md-4">
+                    <button onclick="addList()" class="btn btn-success">Tambahkan</button>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped">
+                        <thead>
+                            <th>Check</th>
+                            <th>Detail</th>
+                            <th>Aksi</th>
+                        </thead>
+                        <tbody id="list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<!-- Boostrap JS File -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+    integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
+    crossorigin="anonymous"></script>
+<!-- TODO js -->
+<script>
+    // Mengambil data dari element yang memiliki id inputTodo
+    let input = document.getElementById("inputTodo");
+    // Mengambil data dari element yang memiliki id list
+    let list = document.getElementById("list");
+    let minimalValue = 3;
+    let listNum = 0;
+    addList = () => {
+        // get
+        let inputTodo = filterList(input.value);
+        // set 
+        if (inputTodo) {
+            list.innerHTML += `<tr id="list${listNum}">
+                                <td>
+                                    <input class="form-check-input" type="checkbox" id="check${listNum}" onclick="done(${listNum})">
+                                </td>
+                                <td width="80%" id="text${listNum}">
+                                    ${inputTodo}
+                                <td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" onclick="editList(${listNum})">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteList(${listNum})">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>`
+            input.value = " ";
+            listNum++;
+
+        }
+    }
+
+    // fungsi untuk menandakan bahwa task telah selesai
+    done = (listId) => {
+        let checkbox = document.getElementById(`check${listId}`);
+        let current = document.getElementById(`text${listId}`);
+        let classExit = current.classList.contains("text-decoration-line-through");
+        if (classExit == true) {
+            current.classList.remove("text-decoration-line-through");
+        } else {
+            current.classList.add("text-decoration-line-through");
+        }
+
+    }
+
+    // cek filtrasi minimal karakter
+    filterList = (x) => {
+        if (x) {
+            if (x.length >= minimalValue) {
+                return x;
+            }
+            else {
+                alert("Please enter more than 3 words")
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    // fungsi edit
+    editList = (listId) => {
+        let currentText = document.getElementById(`text${listId}`);
+        let newText = prompt("Wanna Change list?", currentText.innerHTML);
+        if (filterList(newText)) {
+            currentText.innerHTML = newText;
+        }
+    }
+
+    // fungsi delete
+    deleteList = (listId) => {
+        let current = document.getElementById(`text${listId}`).innerHTML;
+        let confirmDel = confirm(`Are you sure to delete ${current}`);
+        if (confirmDel) {
+            document.getElementById(`list${listId}`).remove();
+        }
+    };
+</script>
+
+</html>
